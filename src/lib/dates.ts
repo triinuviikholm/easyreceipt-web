@@ -55,11 +55,12 @@ export function monthRange(month: string): { gte: Date; lt: Date } {
   return { gte: isoToDbDate(`${month}-01`), lt: isoToDbDate(`${shiftMonth(month, 1)}-01`) };
 }
 
-// "2026-11-03" -> "3 Nov 2026"
+const SHORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+// "2026-11-03" -> "3 Nov 2026". Built by hand because en-GB "short" gives "Sept" in newer ICU versions.
 export function formatDate(iso: string): string {
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" }).format(
-    isoToDbDate(iso),
-  );
+  const [y, m, d] = iso.split("-").map(Number);
+  return `${d} ${SHORT_MONTHS[m - 1]} ${y}`;
 }
 
 // "2026-11" -> "November 2026"
