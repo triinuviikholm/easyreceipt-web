@@ -4,15 +4,15 @@ import { cn } from "@/lib/utils";
 const fieldBase =
   "w-full rounded-xl border border-stone-300 bg-white px-3 text-base text-ink placeholder:text-stone-400 aria-[invalid=true]:border-danger";
 
-export function Input({ className, ...props }: React.InputHTMLAttributes<HTMLInputElement>) {
+export function Input({ className, ...props }: React.ComponentProps<"input">) {
   return <input className={cn(fieldBase, "h-11", className)} {...props} />;
 }
 
-export function Select({ className, ...props }: React.SelectHTMLAttributes<HTMLSelectElement>) {
+export function Select({ className, ...props }: React.ComponentProps<"select">) {
   return <select className={cn(fieldBase, "h-11 pr-8", className)} {...props} />;
 }
 
-export function Textarea({ className, ...props }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+export function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return <textarea className={cn(fieldBase, "min-h-24 py-2", className)} {...props} />;
 }
 
