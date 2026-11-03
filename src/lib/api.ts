@@ -44,5 +44,5 @@ export function isNotFound(err: unknown) {
 }
 
 export function isForeignKeyViolation(err: unknown) {
-  return err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2003";
+  return err instanceof Prisma.PrismaClientKnownRequestError && (err.code === "P2003" || err.code === "P2014");
 }
