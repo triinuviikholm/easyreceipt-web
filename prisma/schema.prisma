@@ -1,0 +1,48 @@
+// EasyReceipt data model. Migrations live in prisma/migrations and are applied on
+// Render at startup with `prisma migrate deploy`.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PaymentMethod {
+  CARD
+  CASH
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique @db.VarChar(40)
+  color     String    @db.VarChar(7)
+  createdAt DateTime  @default(now())
+  receipts  Receipt[]
+}
+
+model Receipt {
+  id            String        @id @default(cuid())
+  store         String        @db.VarChar(100)
+  // Calendar date only (no time, no timezone shift).
+  date          DateTime      @db.Date
+  amount        Decimal       @db.Decimal(10, 2)
+  categoryId    String
+  category      Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  paymentMethod PaymentMethod @default(CARD)
+  note          String?       @db.VarChar(500)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([date, createdAt])
+  @@index([categoryId])
+}
+
+// Internal key/value markers, e.g. "demo-seeded" so sample data is created only once.
+model AppMeta {
+  key       String   @id @db.VarChar(64)
+  value     String   @db.VarChar(200)
+  createdAt DateTime @default(now())
+}
