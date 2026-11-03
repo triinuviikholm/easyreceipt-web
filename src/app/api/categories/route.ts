@@ -11,7 +11,9 @@ export async function GET() {
       include: { _count: { select: { receipts: true } } },
       orderBy: [{ createdAt: "asc" }, { name: "asc" }],
     });
-    return NextResponse.json({ categories: categories.map(toCategoryDTO) });
+    // Seeded categories share a createdAt, so name breaks ties; the default "Other" goes last.
+    const dtos = categories.map(toCategoryDTO).sort((a, b) => Number(a.isDefault) - Number(b.isDefault));
+    return NextResponse.json({ categories: dtos });
   } catch (err) {
     return handleServerError("GET /api/categories", err);
   }
